@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEXAMC - Login/Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #181a20;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    .container {
+      background: #23262e;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      color: #00ff88;
+      text-align: center;
+      margin-bottom: 2rem;
+      text-shadow: 0 0 8px #00ff88;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #b0ffdd;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #00ff88;
+      border-radius: 0.5rem;
+      background: #181a20;
+      color: #fff;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background: #00ff88;
+      color: #181a20;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background: #00cc6a;
+      box-shadow: 0 0 10px #00ff88;
+    }
+    .toggle-form {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #b0ffdd;
+    }
+    .toggle-form a {
+      color: #00ff88;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .error {
+      color: #ff6b6b;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>HEXAMC</h1>
+    
+    <!-- Login Form -->
+    <div id="login-form">
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" placeholder="Enter your email">
+        <div id="login-email-error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" placeholder="Enter your password">
+        <div id="login-password-error" class="error"></div>
+      </div>
+      <button id="login-btn">Login</button>
+      <div class="toggle-form">
+        Don't have an account? <a id="show-register">Register</a>
+      </div>
+    </div>
+
+    <!-- Register Form (Hidden by default) -->
+    <div id="register-form" style="display: none;">
+      <div class="form-group">
+        <label for="register-email">Email</label>
+        <input type="email" id="register-email" placeholder="Enter your email">
+        <div id="register-email-error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label for="register-mcname">Minecraft Username</label>
+        <input type="text" id="register-mcname" placeholder="Enter your Minecraft username">
+        <div id="register-mcname-error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label for="register-password">Password</label>
+        <input type="password" id="register-password" placeholder="Create a password">
+        <div id="register-password-error" class="error"></div>
+      </div>
+      <div class="form-group">
+        <label for="register-confirm-password">Confirm Password</label>
+        <input type="password" id="register-confirm-password" placeholder="Confirm your password">
+        <div id="register-confirm-password-error" class="error"></div>
+      </div>
+      <button id="register-btn">Register</button>
+      <div class="toggle-form">
+        Already have an account? <a id="show-login">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle between login and register forms
+    document.getElementById('show-register').addEventListener('click', () => {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'block';
+    });
+
+    document.getElementById('show-login').addEventListener('click', () => {
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('login-form').style.display = 'block';
+    });
+
+    // Form validation functions
+    function showError(elementId, message) {
+      const errorElement = document.getElementById(elementId + '-error');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      return false;
+    }
+
+    function hideError(elementId) {
+      const errorElement = document.getElementById(elementId + '-error');
+      errorElement.style.display = 'none';
+      return true;
+    }
+
+    // Register functionality
+    document.getElementById('register-btn').addEventListener('click', () => {
+      const email = document.getElementById('register-email').value.trim();
+      const mcname = document.getElementById('register-mcname').value.trim();
+      const password = document.getElementById('register-password').value;
+      const confirmPassword = document.getElementById('register-confirm-password').value;
+
+      // Reset errors
+      ['register-email', 'register-mcname', 'register-password', 'register-confirm-password'].forEach(id => hideError(id));
+
+      // Validation
+      let isValid = true;
+      
+      if (!email) {
+        showError('register-email', 'Email is required');
+        isValid = false;
+      } else if (!/\S+@\S+\.\S+/.test(email)) {
+        showError('register-email', 'Please enter a valid email');
+        isValid = false;
+      }
+
+      if (!mcname) {
+        showError('register-mcname', 'Minecraft username is required');
+        isValid = false;
+      }
+
+      if (!password) {
+        showError('register-password', 'Password is required');
+        isValid = false;
+      } else if (password.length < 6) {
+        showError('register-password', 'Password must be at least 6 characters');
+        isValid = false;
+      }
+
+      if (password !== confirmPassword) {
+        showError('register-confirm-password', 'Passwords do not match');
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      // Get existing users or initialize empty array
+      const users = JSON.parse(localStorage.getItem('hexamc_users')) || [];
+      
+      // Check if email already exists
+      if (users.some(user => user.email === email)) {
+        showError('register-email', 'Email already registered');
+        return;
+      }
+
+      // Create new user
+      const newUser = {
+        id: Date.now().toString(),
+        email,
+        mcname,
+        password: btoa(password), // Simple encoding, not secure for production
+        createdAt: new Date().toISOString()
+      };
+
+      // Save user
+      users.push(newUser);
+      localStorage.setItem('hexamc_users', JSON.stringify(users));
+      
+      // Auto login
+      localStorage.setItem('hexamc_currentUser', JSON.stringify({
+        id: newUser.id,
+        email: newUser.email,
+        mcname: newUser.mcname
+      }));
+
+      // Redirect to rewards page
+      window.location.href = 'index.html';
+    });
+
+    // Login functionality
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      // Reset errors
+      ['login-email', 'login-password'].forEach(id => hideError(id));
+
+      // Validation
+      if (!email) {
+        showError('login-email', 'Email is required');
+        return;
+      }
+
+      if (!password) {
+        showError('login-password', 'Password is required');
+        return;
+      }
+
+      // Get users
+      const users = JSON.parse(localStorage.getItem('hexamc_users')) || [];
+      const user = users.find(u => u.email === email);
+
+      // Check if user exists and password matches
+      if (!user || btoa(password) !== user.password) {
+        showError('login-password', 'Invalid email or password');
+        return;
+      }
+
+      // Save current user
+      localStorage.setItem('hexamc_currentUser', JSON.stringify({
+        id: user.id,
+        email: user.email,
+        mcname: user.mcname
+      }));
+
+      // Redirect to rewards page
+      window.location.href = 'index.html';
+    });
+
+    // Allow login on Enter key
+    ['login-email', 'login-password'].forEach(id => {
+      document.getElementById(id).addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('login-btn').click();
+        }
+      });
+    });
+
+    // Allow register on Enter key
+    ['register-email', 'register-mcname', 'register-password', 'register-confirm-password'].forEach(id => {
+      document.getElementById(id).addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          document.getElementById('register-btn').click();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

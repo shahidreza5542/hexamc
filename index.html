@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HEXAMC - Free Rewards</title>
+  <link rel="icon" type="image/png" href="https://i.ibb.co/kVspB06w/image.png">
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-header">
+      <img src="https://i.ibb.co/kVspB06w/image.png" alt="HEXAMC Logo" class="navbar-logo">
+      <span class="navbar-title">HEXAMC</span>
+    </div>
+    <button id="logout-btn" style="background: #ff4d4d; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 0.4rem; cursor: pointer; font-weight: bold; display: none;">Logout</button>
+  </nav>
+  <main>
+    <!-- User Info Display -->
+    <div id="user-info" style="text-align: center; margin: 1rem 0; padding: 0.5rem; background: #23262e; border-radius: 0.5rem; max-width: 600px; margin: 1rem auto;">
+      <span style="color: #b0ffdd;">Welcome</span>
+      <span id="user-mcname" style="color: #00ff88; font-weight: bold; margin-right: 1rem;"></span>
+    </div>
+    
+    <section class="free-category">
+      <h2>Free Rewards</h2>
+      <div class="free-sections">
+        <div class="free-section ranks-section">
+          <h3>🏷️ Ranks (Watch ads to claim)</h3>
+          <div class="rewards-grid" id="ranks-grid">
+            <!-- Ranks will be rendered by JS -->
+          </div>
+        </div>
+        <div class="free-section crates-section">
+          <h3>🎁 Crates (Watch ads to claim)</h3>
+          <div class="rewards-grid" id="crates-grid">
+            <!-- Crates will be rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Ad Modal -->
+  <div id="ad-modal" class="modal">
+    <div class="modal-content ad-modal-content">
+      <span class="modal-close" id="ad-modal-close" disabled>&times;</span>
+      <h3>Watch Ad</h3>
+      <div id="ad-container"></div>
+      <div id="ad-modal-timer"></div>
+    </div>
+  </div>
+
+  <!-- Code Modal -->
+  <div id="code-modal" class="modal">
+    <div class="modal-content code-modal-content">
+      <span class="modal-close" id="code-modal-close" disabled>&times;</span>
+      <h3>Your Reward Code</h3>
+      <div id="reward-code" class="reward-code"></div>
+      <button id="copy-code-btn">Copy Code</button>
+      <div id="code-modal-timer"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <footer class="footer">
+    <div>
+      &copy; <span id="footer-year"></span> HEXAMC STORE. All rights reserved.
+    </div>
+    <div class="footer-support">
+      Help &amp; Support:
+      <a href="https://discord.gg/6mynYADsVx" target="_blank" rel="noopener" class="footer-link">Discord</a>
+    </div>
+  </footer>
+  <script>
+    // Check if user is logged in
+    const currentUser = JSON.parse(localStorage.getItem('hexamc_currentUser'));
+    
+    if (!currentUser) {
+      // Redirect to login if not logged in
+      window.location.href = 'login.html';
+    } else {
+      // Show user info and controls
+      const userInfo = document.getElementById('user-info');
+      const mcnameDisplay = document.getElementById('user-mcname');
+      const logoutBtn = document.getElementById('logout-btn');
+      
+      // Show Minecraft name or email
+      mcnameDisplay.textContent = currentUser.mcname || currentUser.email;
+      
+      // Show admin link for admin users (you can add admin check here)
+      const adminLink = document.getElementById('admin-link');
+      if (currentUser.email === 'shahidreza62008@gmail.com') { // Replace with your admin check
+        adminLink.style.display = 'inline-block';
+      }
+      
+      // Show logout button in navbar
+      if (logoutBtn) {
+        logoutBtn.style.display = 'block';
+        logoutBtn.addEventListener('click', () => {
+          localStorage.removeItem('hexamc_currentUser');
+          window.location.href = 'login.html';
+        });
+      }
+    }
+    
+    // Set footer year
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html> 
